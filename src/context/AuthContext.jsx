@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
     }
 
     axios
-      .get("ai-counsellor-backend-production-6d05.up.railway.app/auth/me", {
+      .get("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/me", {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => {
@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
 
 
   const login = async (email, password) => {
-    const res = await axios.post("ai-counsellor-backend-production-6d05.up.railway.app/auth/login", { email, password });
+    const res = await axios.post("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/login", { email, password });
     localStorage.setItem("token", res.data.token);
     setUser({
       ...res.data.user,
@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
   };
 
   const signup = async (name, email, password) => {
-    const res = await axios.post("ai-counsellor-backend-production-6d05.up.railway.app/auth/signup", { name, email, password });
+    const res = await axios.post("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/signup", { name, email, password });
     localStorage.setItem("token", res.data.token);
     setUser({
       ...res.data.user,
@@ -64,12 +64,12 @@ export function AuthProvider({ children }) {
     };
 
 
-    await axios.put("ai-counsellor-backend-production-6d05.up.railway.app/auth/onboarding", payload, {
+    await axios.put("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/onboarding", payload, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
     // Fetch fresh user after backend recalculates universities
-    const res = await axios.get("ai-counsellor-backend-production-6d05.up.railway.app/auth/me", {
+    const res = await axios.get("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/me", {
       headers: { Authorization: `Bearer ${token}` }
     });
 
