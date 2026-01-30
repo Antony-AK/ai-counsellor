@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Send, Bot } from "lucide-react";
 import axios from "axios";
+import { apiUrl } from "../context/api"
 
 
 export default function AiCounsellor() {
@@ -27,7 +28,7 @@ export default function AiCounsellor() {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        "http://localhost:5000/ai/chat/history",
+        `${apiUrl}/ai/chat/history`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -79,7 +80,7 @@ If SOP-related, generate a full SOP draft.
 
     const token = localStorage.getItem("token");
 
-    const res = await axios.post("http://localhost:5000/ai/chat", {
+    const res = await axios.post(`${apiUrl}/ai/chat`, {
       message: text
     }, {
       headers: { Authorization: `Bearer ${token}` }

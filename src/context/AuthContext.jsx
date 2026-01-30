@@ -7,6 +7,10 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);   // 👈 NEW
 
+  // const apiUrl = "https://ai-counsellor-backend-production-6d05.up.railway.app"
+    const apiUrl = "http://localhost:5000"
+
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -16,7 +20,7 @@ export function AuthProvider({ children }) {
     }
 
     axios
-      .get("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/me", {
+      .get(`${apiUrl}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => {
@@ -37,7 +41,7 @@ export function AuthProvider({ children }) {
 
 
   const login = async (email, password) => {
-    const res = await axios.post("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/login", { email, password });
+    const res = await axios.post(`${apiUrl}/auth/login`, { email, password });
     localStorage.setItem("token", res.data.token);
     setUser({
       ...res.data.user,
@@ -46,7 +50,7 @@ export function AuthProvider({ children }) {
   };
 
   const signup = async (name, email, password) => {
-    const res = await axios.post("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/signup", { name, email, password });
+    const res = await axios.post(`${apiUrl}/auth/signup`, { name, email, password });
     localStorage.setItem("token", res.data.token);
     setUser({
       ...res.data.user,
@@ -64,12 +68,12 @@ export function AuthProvider({ children }) {
     };
 
 
-    await axios.put("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/onboarding", payload, {
+    await axios.put(`${apiUrl}/auth/onboarding`, payload, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
     // Fetch fresh user after backend recalculates universities
-    const res = await axios.get("https://ai-counsellor-backend-production-6d05.up.railway.app/auth/me", {
+    const res = await axios.get(`${apiUrl}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 

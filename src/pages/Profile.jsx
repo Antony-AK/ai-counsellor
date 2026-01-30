@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Select from "../components/Select";
+import { apiUrl } from "../context/api"
 
 
 
@@ -45,7 +46,7 @@ export default function Profile() {
     try {
       setIsSaving(true);
 
-      const res = await axios.put("http://localhost:5000/auth/onboarding", form, {
+      const res = await axios.put(`${apiUrl}/auth/onboarding`, form, {
         headers: { Authorization: `Bearer ${token}` },
         timeout: 20000
       });

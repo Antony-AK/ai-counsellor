@@ -3,7 +3,7 @@ import { Search, Lock, Check, MapPin } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useLocation } from "react-router-dom";
 import Select from "../components/Select";
-
+import { apiUrl } from "../context/api"
 
 export default function Universities() {
   const [countries, setCountries] = useState([]);
@@ -18,6 +18,7 @@ export default function Universities() {
   const location = useLocation();
   const [showAgentModal, setShowAgentModal] = useState(false);
   const [pendingUni, setPendingUni] = useState(null);
+  
 
 
 
@@ -51,7 +52,7 @@ export default function Universities() {
 
     const token = localStorage.getItem("token");
     const res = await fetch(
-      `http://localhost:5000/universities?mode=${selectedMode}`,
+      `${apiUrl}/universities?mode=${selectedMode}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -122,7 +123,7 @@ export default function Universities() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:5000/shortlist", {
+      const res = await fetch(`${apiUrl}/shortlist`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +151,7 @@ export default function Universities() {
   const lockUniversity = async (uni) => {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:5000/lock", {
+    const res = await fetch(`${apiUrl}/lock`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

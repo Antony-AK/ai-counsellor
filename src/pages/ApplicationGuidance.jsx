@@ -7,6 +7,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import axios from "axios";
+import { apiUrl } from "../context/api"
 
 export default function ApplicationGuidance() {
   const [profile, setProfile] = useState(null);
@@ -26,7 +27,7 @@ export default function ApplicationGuidance() {
   const refreshProfile = async () => {
     const token = localStorage.getItem("token");
     const res = await axios.get(
-      "http://localhost:5000/auth/me",
+      `${apiUrl}/auth/me`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setProfile(res.data.profile);
@@ -65,7 +66,7 @@ export default function ApplicationGuidance() {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "http://localhost:5000/ai/generate-tasks",
+        `${apiUrl}/ai/generate-tasks`,
         { universityName: uni.name },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -85,7 +86,7 @@ export default function ApplicationGuidance() {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:5000/auth/me",
+          `${apiUrl}/auth/me`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -149,7 +150,7 @@ export default function ApplicationGuidance() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5000/auth/tasks/toggle",
+        `${apiUrl}/auth/tasks/toggle`,
         { universityName: selectedUni.name, taskId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -36,7 +36,7 @@ export default function VoiceOnboarding() {
             q: `
 What is your current education level?
 
-You can say:
+You can say like:
 Bachelor's degree
 `
         },

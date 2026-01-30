@@ -4,6 +4,11 @@ import { Mail, Lock, GraduationCap, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
+// import { useGoogleLogin } from "@react-oauth/google";
+import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
+import { GoogleLogin } from "@react-oauth/google";
+
 
 
 export default function Auth() {
@@ -51,6 +56,22 @@ export default function Auth() {
     }
   };
 
+  // const googleLogin = useGoogleLogin({
+  //   onSuccess: async (tokenResponse) => {
+  //     try {
+  //       const result = await axios.post(
+  //         `http://localhost:5000/auth/google`,
+  //         verifyIdToken({ idToken })
+  //       );
+
+  //       localStorage.setItem("token", result.data.token);
+  //       navigate("/dashboard");
+  //     } catch (err) {
+  //       alert("Google sign-in failed");
+  //     }
+  //   },
+  //   onError: () => alert("Google Sign-In failed"),
+  // });
 
 
 
@@ -69,121 +90,170 @@ export default function Auth() {
   ${isSignup ? "md:translate-x-full" : "translate-x-0"}`}
       >
 
-<div className="max-w-md mx-auto w-full bg-purple-600/20 rounded-xl md:rounded-none md:bg-transparent p-5 md:p-0">
+        <div className="max-w-md mx-auto w-full bg-purple-600/20 rounded-xl md:rounded-none md:bg-transparent p-5 md:p-0">
 
-        {/* Logo */}
-        <div className="flex items-center gap-3 mb-10">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-purple-500 flex items-center justify-center text-white shadow-md">
-            <GraduationCap size={22} />
+          {/* Logo */}
+          <div className="flex items-center gap-3 mb-10">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-purple-500 flex items-center justify-center text-white shadow-md">
+              <GraduationCap size={22} />
+            </div>
+            <span className="text-base sm:text-lg font-semibold text-gray-900">
+              AI Counsellor</span>
           </div>
-          <span className="text-base sm:text-lg font-semibold text-gray-900">
-            AI Counsellor</span>
-        </div>
 
-        {/* Title */}
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-          {view ? "Create your account" : "Welcome back"}
-        </h1>
-        <p className="text-sm sm:text-base text-gray-500 mb-8 sm:mb-10">
-          {view
-            ? "Begin your guided study abroad journey"
-            : "Continue your study abroad journey"}
-        </p>
+          {/* Title */}
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            {view ? "Create your account" : "Welcome back"}
+          </h1>
+          <p className="text-sm sm:text-base text-gray-500 mb-8 sm:mb-10">
+            {view
+              ? "Begin your guided study abroad journey"
+              : "Continue your study abroad journey"}
+          </p>
 
-        {/* FORM */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* FORM */}
+          <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* Name (Signup) */}
-          {view && (
+
+
+            {/* GOOGLE LOGIN */}
+            <div className="flex justify-center w-full rouned-xl">
+              {/* <button
+                type="button"
+                onClick={() => googleLogin()}
+                className="
+    w-full flex items-center justify-center gap-3
+    py-3 rounded-xl border border-gray-200
+    bg-white text-gray-800 font-medium
+    shadow-sm hover:shadow-md
+    hover:bg-gray-50 transition
+  "
+              >
+                <FcGoogle size={22} />
+                Continue with Google
+              </button> */}
+
+              <GoogleLogin
+                onSuccess={async (res) => {
+                  try {
+                    const result = await axios.post(
+                      "http://localhost:5000/auth/google",
+                      { token: res.credential } // ✅ ID TOKEN
+                    );
+
+                    localStorage.setItem("token", result.data.token);
+                    navigate("/dashboard");
+                  } catch (err) {
+                    console.error(err);
+                    alert("Google sign-in failed");
+                  }
+                }}
+                onError={() => alert("Google Sign-In failed")}
+                useOneTap={false}
+              />
+
+
+            </div>
+
+            {/* OR DIVIDER */}
+            <div className="flex items-center gap-3 my-4">
+              <div className="flex-1 h-px bg-gray-300" />
+              <span className="text-sm text-gray-500">OR</span>
+              <div className="flex-1 h-px bg-gray-300" />
+            </div>
+
+
+            {/* Name (Signup) */}
+            {view && (
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                  <input
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    required
+
+                    placeholder="John Doe"
+                    className="w-full pl-11 pr-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-blue-500 transition"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Email */}
             <div>
               <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Full Name
+                Email
               </label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                 <input
-                  value={name}
-                  onChange={e => setName(e.target.value)}
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   required
-
-                  placeholder="John Doe"
-                  className="w-full pl-11 pr-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-blue-500 transition"
+                  placeholder="you@example.com"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-blue-500 transition"
                 />
               </div>
             </div>
-          )}
 
-          {/* Email */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 mb-2 block">
-              Email
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                placeholder="you@example.com"
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-blue-500 transition"
-              />
+            {/* Password */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-2 block">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  type="password"
+                  placeholder="••••••••"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-blue-500 transition"
+                />
+              </div>
+              {view && (
+                <p className="text-sm text-gray-400 mt-2">Minimum 8 characters</p>
+              )}
             </div>
-          </div>
 
-          {/* Password */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 mb-2 block">
-              Password
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-              <input
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                type="password"
-                placeholder="••••••••"
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-blue-500 transition"
-              />
-            </div>
-            {view && (
-              <p className="text-sm text-gray-400 mt-2">Minimum 8 characters</p>
-            )}
-          </div>
-
-          {/* Button */}
-          <button
-            type="submit"
-            className="btn-hero w-full py-3 rounded-xl
+            {/* Button */}
+            <button
+              type="submit"
+              className="btn-hero w-full py-3 rounded-xl
 text-white font-medium text-base sm:text-lg
 transition hover:scale-105"
-          >
-            {view ? "Create Account →" : "Login →"}
-          </button>
-
-
-          {/* Switch */}
-          <p className="text-center text-sm sm:text-base text-gray-500 mt-4">
-            {view ? "Already have an account?" : "Don’t have an account?"}{" "}
-            <span
-              onClick={() => {
-                const next = !view;
-                setIsSignup(next);
-
-                setTimeout(() => {
-                  setView(next);
-                  navigate(`/auth?mode=${next ? "signup" : "login"}`);
-                }, 250);
-              }}
-
-              className="text-blue-600 font-medium cursor-pointer hover:underline"
             >
-              {view ? "Login" : "Sign up"}
-            </span>
-          </p>
-        </form>
-      </div>
+              {view ? "Create Account →" : "Login →"}
+            </button>
+
+
+            {/* Switch */}
+            <p className="text-center text-sm sm:text-base text-gray-500 mt-4">
+              {view ? "Already have an account?" : "Don’t have an account?"}{" "}
+              <span
+                onClick={() => {
+                  const next = !view;
+                  setIsSignup(next);
+
+                  setTimeout(() => {
+                    setView(next);
+                    navigate(`/auth?mode=${next ? "signup" : "login"}`);
+                  }, 250);
+                }}
+
+                className="text-blue-600 font-medium cursor-pointer hover:underline"
+              >
+                {view ? "Login" : "Sign up"}
+              </span>
+            </p>
+          </form>
+        </div>
 
       </div>
 
