@@ -1,0 +1,107 @@
+@import "tailwindcss";
+/* @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"); */
+
+:root {
+  --background: 40 33% 98%;
+  --foreground: 230 25% 15%;
+  --card: 0 0% 100%;
+  --border: 220 13% 91%;
+  --primary: 234 89% 54%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+
+  --gradient-hero: linear-gradient(135deg, #4f46e5, #9333ea);
+  --shadow-glow: 0 0 40px rgba(99,102,241,.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  --shadow-lg: 0 15px 30px rgba(0,0,0,.12);
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: Inter, system-ui, sans-serif;
+}
+
+/* COLORS */
+.bg-background { background: hsl(var(--background)); }
+.bg-card { background: hsl(var(--card)); }
+.bg-primary { background: hsl(var(--primary)); }
+.bg-muted { background: hsl(var(--muted)); }
+
+.text-foreground { color: hsl(var(--foreground)); }
+.text-muted-foreground { color: hsl(var(--muted-foreground)); }
+.text-primary { color: hsl(var(--primary)); }
+
+/* GRADIENT */
+.text-gradient-hero {
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.bg-gradient-hero {
+  background: var(--gradient-hero);
+}
+
+/* SHADOWS */
+.shadow-glow { box-shadow: var(--shadow-glow); }
+
+/* CARDS */
+.card-elevated {
+  background: hsl(var(--card));
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid hsl(var(--border));
+}
+
+/* BUTTON */
+.btn-hero {
+  background: var(--gradient-hero);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  transition: .3s;
+}
+.btn-hero:hover { transform: scale(1.03); }
+
+/* ICON BOX */
+.icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#4f46e5,#9333ea);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+}
+
+
+button{
+  cursor: pointer;
+
+}
+
+
+
+.ai-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #7c3aed; /* purple-600 */
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;     /* IE + Edge */
+  scrollbar-width: none;        /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari */
+}
