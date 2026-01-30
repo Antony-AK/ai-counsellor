@@ -137,7 +137,7 @@ export default function Auth() {
                 onSuccess={async (res) => {
                   try {
                     const result = await axios.post(
-                      "http://localhost:5000/auth/google",
+                      "https://ai-counsellor-backend-production-6d05.up.railway.app/auth/google",
                       { token: res.credential } // ✅ ID TOKEN
                     );
 
