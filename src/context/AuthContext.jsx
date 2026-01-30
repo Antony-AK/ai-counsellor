@@ -7,8 +7,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);   // 👈 NEW
 
-  // const apiUrl = "https://ai-counsellor-backend-production-6d05.up.railway.app"
-    const apiUrl = "http://localhost:5000"
+  const apiUrl = "https://ai-counsellor-backend-production-6d05.up.railway.app"
+    // const apiUrl = "http://localhost:5000"
 
 
   useEffect(() => {
