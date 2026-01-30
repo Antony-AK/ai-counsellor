@@ -212,6 +212,7 @@ export default function Auth() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
+                    autoComplete={view ? "new-password" : "current-password"}
                   type="password"
                   placeholder="••••••••"
                   className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-blue-500 transition"
