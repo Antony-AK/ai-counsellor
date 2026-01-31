@@ -16,6 +16,9 @@ export default function VoiceOnboarding() {
     const stepRef = useRef(0);
     const transcriptEndRef = useRef(null);
 
+    const [ready, setReady] = useState(false);
+
+
     useEffect(() => {
         transcriptEndRef.current?.scrollIntoView({
             behavior: "smooth",
@@ -163,24 +166,6 @@ Or completed
         stepRef.current = step;
     }, [step]);
 
-
-
-    useEffect(() => {
-        initRecognition();
-
-        const welcome = new SpeechSynthesisUtterance(
-            "Welcome to AI voice onboarding. Shall we begin?"
-        );
-
-        welcome.rate = 0.95;
-
-        welcome.onend = () => {
-            askQuestion(); // 🔥 START FIRST QUESTION PROPERLY
-        };
-
-        speechSynthesis.cancel();
-        speechSynthesis.speak(welcome);
-    }, []);
 
 
     useEffect(() => {
@@ -493,56 +478,115 @@ Or completed
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-[#0b0614] to-black text-white">
 
-            {/* Main Card */}
-            <div
-                className="
-    w-full max-w-[880px]
-    rounded-3xl
-    bg-white/5 backdrop-blur-xl
-    border border-white/10 shadow-2xl
-    px-6 py-6
-    sm:px-10 sm:py-10
-    lg:px-14 lg:py-12
-  "
-            >
 
-                {/* Header */}
-                <div className="flex items-center justify-between mb-10">
-                    <div>
-                        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">
+            {!ready && (
+                <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-[#0b0614] to-black px-6">
+                    <div className="w-full max-w-xl rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl px-8 py-10 text-center">
+
+                        {/* Icon */}
+                        <div className="mx-auto mb-6 w-20 h-20 rounded-full bg-purple-600/20 flex items-center justify-center shadow-[0_0_40px_#a855f7]">
+                            <span className="text-3xl">🎙️</span>
+                        </div>
+
+                        {/* Heading */}
+                        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
                             AI Voice Onboarding
                         </h1>
-                        <p className="text-xs sm:text-sm text-white/60 mt-1">
-                            Answer naturally. You can speak freely.
+
+                        {/* Subheading */}
+                        <p className="text-white/60 text-sm sm:text-base mt-5 leading-relaxed">
+                            Answer a few questions using your voice.
+                            Speak naturally - our AI will listen, understand, and guide you step by step.
+                        </p>
+
+                        {/* Info Pills */}
+                        <div className="flex flex-wrap justify-center gap-3 mt-6 text-xs text-white/70">
+                            <span className="px-3 py-1 rounded-full bg-white/10">🎧 Hands-free</span>
+                            <span className="px-3 py-1 rounded-full bg-white/10">⚡ Fast</span>
+                            <span className="px-3 py-1 rounded-full bg-white/10">🤖 AI-powered</span>
+                        </div>
+
+                        {/* Start Button */}
+                        <button
+                            onClick={() => {
+                                initRecognition();
+                                setReady(true);
+
+                                const welcome = new SpeechSynthesisUtterance(
+                                    "Welcome to AI voice onboarding. Shall we begin?"
+                                );
+                                welcome.rate = 0.95;
+                                welcome.onend = askQuestion;
+
+                                speechSynthesis.cancel();
+                                speechSynthesis.speak(welcome);
+                            }}
+                            className="mt-8 w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 transition font-medium shadow-[0_0_25px_#a855f7]"
+                        >
+                            Start Voice Onboarding
+                        </button>
+
+                        {/* Footer hint */}
+                        <p className="mt-4 text-[11px] text-white/40">
+                            Please allow microphone access when prompted
+                        </p>
+                    </div>
+                </div>
+            )}
+
+
+
+            {ready && (
+
+                < div
+                    className="
+            w-full max-w-[880px]
+            rounded-3xl
+            bg-white/5 backdrop-blur-xl
+            border border-white/10 shadow-2xl
+            px-6 py-6
+            sm:px-10 sm:py-10
+            lg:px-14 lg:py-12
+            "
+                >
+
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-10">
+                        <div>
+                            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">
+                                AI Voice Onboarding
+                            </h1>
+                            <p className="text-xs sm:text-sm text-white/60 mt-1">
+                                Answer naturally. You can speak freely.
+                            </p>
+                        </div>
+
+                        <div className="text-[10px] sm:text-xs text-white/50">
+                            Step {Math.min(step + 1, QUESTIONS.length)} of {QUESTIONS.length}
+                        </div>
+                    </div>
+
+                    {/* Center Listening Orb */}
+                    <div className="flex flex-col items-center mb-10">
+                        <div
+                            className={`w-28 h-28 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-full flex items-center justify-center
+    ${listening
+                                    ? "bg-purple-500/80 animate-pulse shadow-[0_0_80px_#a855f7]"
+                                    : "bg-purple-700/80 shadow-lg"}
+  `}
+                        >
+
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-black/40" />
+                        </div>
+
+                        <p className="mt-4 text-xs sm:text-sm tracking-wide text-white/70">
+                            {listening ? "Listening..." : "AI speaking..."}
                         </p>
                     </div>
 
-                    <div className="text-[10px] sm:text-xs text-white/50">
-                        Step {Math.min(step + 1, QUESTIONS.length)} of {QUESTIONS.length}
-                    </div>
-                </div>
-
-                {/* Center Listening Orb */}
-                <div className="flex flex-col items-center mb-10">
+                    {/* Transcript */}
                     <div
-                        className={`w-28 h-28 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-full flex items-center justify-center
-    ${listening
-                                ? "bg-purple-500/80 animate-pulse shadow-[0_0_80px_#a855f7]"
-                                : "bg-purple-700/80 shadow-lg"}
-  `}
-                    >
-
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-black/40" />
-                    </div>
-
-                    <p className="mt-4 text-xs sm:text-sm tracking-wide text-white/70">
-                        {listening ? "Listening..." : "AI speaking..."}
-                    </p>
-                </div>
-
-                {/* Transcript */}
-                <div
-                    className="
+                        className="
     rounded-2xl bg-black/40 border border-white/10
     px-4 py-4 sm:px-6 sm:py-5
     max-h-[220px] sm:max-h-[280px]
@@ -551,84 +595,86 @@ Or completed
     text-xs sm:text-sm
     leading-relaxed
   "
-                >
+                    >
 
-                    {transcript.map((t, i) => (
-                        <div
-                            key={i}
-                            className={`flex gap-3 ${t.role === "ai" ? "items-start" : "justify-end"}`}
-                        >
-                            {t.role === "ai" && (
-                                <div className="text-purple-400 mt-1">🤖</div>
-                            )}
-
+                        {transcript.map((t, i) => (
                             <div
-                                className={`
+                                key={i}
+                                className={`flex gap-3 ${t.role === "ai" ? "items-start" : "justify-end"}`}
+                            >
+                                {t.role === "ai" && (
+                                    <div className="text-purple-400 mt-1">🤖</div>
+                                )}
+
+                                <div
+                                    className={`
     max-w-[85%] sm:max-w-[70%]
     px-3 py-2 sm:px-4 sm:py-3
     rounded-2xl
     text-xs sm:text-sm
     ${t.role === "ai"
-                                        ? "bg-white/10 text-white/90"
-                                        : "bg-purple-600 text-white"}
+                                            ? "bg-white/10 text-white/90"
+                                            : "bg-purple-600 text-white"}
   `}
-                            >
+                                >
 
-                                {t.text}
+                                    {t.text}
+                                </div>
+
+                                {t.role === "user" && (
+                                    <div className="text-white/60 mt-1">🧑</div>
+                                )}
                             </div>
+                        ))}
 
-                            {t.role === "user" && (
-                                <div className="text-white/60 mt-1">🧑</div>
-                            )}
-                        </div>
-                    ))}
-
-                    <div ref={transcriptEndRef} />
+                        <div ref={transcriptEndRef} />
 
 
-                    {transcript.length === 0 && (
-                        <p className="text-center text-white/40 text-sm">
-                            Your conversation will appear here
-                        </p>
-                    )}
+                        {transcript.length === 0 && (
+                            <p className="text-center text-white/40 text-sm">
+                                Your conversation will appear here
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
+
+                        <button
+                            onClick={() => speak(QUESTIONS[step].q)}
+                            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition  text-xs sm:text-sm"
+                        >
+                            Repeat Question
+                        </button>
+
+                        <button
+                            onClick={() => {
+                                speechSynthesis.cancel();
+                                recognitionRef.current?.stop();
+                                isRecognizingRef.current = false;
+
+                                profileRef.current = {};
+                                setTranscript([]);
+                                setProfile({});
+                                setStep(0);
+
+                                const utter = new SpeechSynthesisUtterance(
+                                    "Restarting onboarding. Let's begin again."
+                                );
+                                utter.rate = 0.95;
+                                utter.onend = () => askQuestion();
+                                speechSynthesis.speak(utter);
+                            }}
+                            className="px-6 py-2.5 rounded-xl bg-red-500/90 hover:bg-red-600 transition text-sm"
+                        >
+                            Restart
+                        </button>
+
+                    </div>
                 </div>
-
-                {/* Actions */}
-                <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
-
-                    <button
-                        onClick={() => speak(QUESTIONS[step].q)}
-                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition  text-xs sm:text-sm"
-                    >
-                        Repeat Question
-                    </button>
-
-                    <button
-                        onClick={() => {
-                            speechSynthesis.cancel();
-                            recognitionRef.current?.stop();
-                            isRecognizingRef.current = false;
-
-                            profileRef.current = {};
-                            setTranscript([]);
-                            setProfile({});
-                            setStep(0);
-
-                            const utter = new SpeechSynthesisUtterance(
-                                "Restarting onboarding. Let's begin again."
-                            );
-                            utter.rate = 0.95;
-                            utter.onend = () => askQuestion();
-                            speechSynthesis.speak(utter);
-                        }}
-                        className="px-6 py-2.5 rounded-xl bg-red-500/90 hover:bg-red-600 transition text-sm"
-                    >
-                        Restart
-                    </button>
-
-                </div>
-            </div>
-        </div>
+            )
+            }
+        </div >
     );
 
 }
