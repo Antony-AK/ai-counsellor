@@ -4,10 +4,8 @@ import { Mail, Lock, GraduationCap, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-// import { useGoogleLogin } from "@react-oauth/google";
-import { FcGoogle } from "react-icons/fc";
+
 import axios from "axios";
-import { GoogleLogin } from "@react-oauth/google";
 
 
 
@@ -56,24 +54,6 @@ export default function Auth() {
     }
   };
 
-  // const googleLogin = useGoogleLogin({
-  //   onSuccess: async (tokenResponse) => {
-  //     try {
-  //       const result = await axios.post(
-  //         `http://localhost:5000/auth/google`,
-  //         verifyIdToken({ idToken })
-  //       );
-
-  //       localStorage.setItem("token", result.data.token);
-  //       navigate("/dashboard");
-  //     } catch (err) {
-  //       alert("Google sign-in failed");
-  //     }
-  //   },
-  //   onError: () => alert("Google Sign-In failed"),
-  // });
-
-
 
 
   const [view, setView] = useState(mode === "signup");
@@ -114,55 +94,6 @@ export default function Auth() {
           {/* FORM */}
           <form onSubmit={handleSubmit} className="space-y-5">
 
-
-
-            {/* GOOGLE LOGIN */}
-            <div className="flex justify-center w-full rouned-xl">
-              {/* <button
-                type="button"
-                onClick={() => googleLogin()}
-                className="
-    w-full flex items-center justify-center gap-3
-    py-3 rounded-xl border border-gray-200
-    bg-white text-gray-800 font-medium
-    shadow-sm hover:shadow-md
-    hover:bg-gray-50 transition
-  "
-              >
-                <FcGoogle size={22} />
-                Continue with Google
-              </button> */}
-
-              <GoogleLogin
-                onSuccess={async (res) => {
-                  try {
-                    const result = await axios.post(
-                      "https://ai-counsellor-backend-production-6d05.up.railway.app/auth/google",
-                      { token: res.credential } // ✅ ID TOKEN
-                    );
-
-                    localStorage.setItem("token", result.data.token);
-                    navigate("/dashboard");
-                  } catch (err) {
-                    console.error(err);
-                    alert("Google sign-in failed");
-                  }
-                }}
-                onError={() => alert("Google Sign-In failed")}
-                useOneTap={false}
-              />
-
-
-            </div>
-
-            {/* OR DIVIDER */}
-            <div className="flex items-center gap-3 my-4">
-              <div className="flex-1 h-px bg-gray-300" />
-              <span className="text-sm text-gray-500">OR</span>
-              <div className="flex-1 h-px bg-gray-300" />
-            </div>
-
-
             {/* Name (Signup) */}
             {view && (
               <div>
@@ -194,6 +125,7 @@ export default function Auth() {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
+                  autoComplete="username"
                   required
                   placeholder="you@example.com"
                   className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-blue-500 transition"
@@ -212,7 +144,7 @@ export default function Auth() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
-                    autoComplete={view ? "new-password" : "current-password"}
+                  autoComplete={view ? "new-password" : "current-password"}
                   type="password"
                   placeholder="••••••••"
                   className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-blue-500 transition"
